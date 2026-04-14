@@ -23,8 +23,11 @@ const handleUpdateTask = async (e) => {
                 e.preventDefault()
                 setLoading(true)
                  // checkbox value is true or false
+                 
 
-                const url = `http://localhost:5000/tasks/${id}`
+                const URL = import.meta.env.VITE_API_URL || "http://localhost:5000"
+                const url = `${URL}/tasks/${id}`
+                
                 const response = await axios.patch(url, {
                     title:taskTitle,
                     completed:taskCompleteStatus,

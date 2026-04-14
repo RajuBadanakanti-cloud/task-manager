@@ -20,7 +20,9 @@ const handleAddTask = async (e) => {
                 e.preventDefault()
                 setLoading(true)
 
-                const url = "http://localhost:5000/tasks"
+                const URL = import.meta.env.VITE_API_URL || "http://localhost:5000"
+                const url = `${URL}/tasks`
+                
                 const response = await axios.post(url, {
                     title,
                     completed: completeStatus === "true" ? true : false,

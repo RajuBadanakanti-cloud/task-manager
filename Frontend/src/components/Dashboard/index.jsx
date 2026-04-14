@@ -7,7 +7,7 @@ import UpdateTask from "../UpdateTask";
 
 const Dashboard = () => {
 
-const { taskList, setTaskList, error } = useContext(UserContext)
+const { taskList, setTaskList, loading, error } = useContext(UserContext)
 const [isAdding, setIsAdding] = useState(false) // open and close add task page
 const [isUpdating, setIsUpdating] = useState(false) // open and close update task page
 const [updatingData, setUpdatingData] = useState({}) // data for updating task (completed/incompleted)
@@ -23,8 +23,10 @@ const searchedTaskList = taskList.filter((e) => e.title.toLowerCase().includes(s
 
         try {
 
+            const URL = import.meta.env.VITE_API_URL || "http://localhost:5000"
+
             const response = await axios.patch(
-                `http://localhost:5000/tasks/${taskId}`,
+                `${URL}/tasks/${taskId}`,
                 { completed: !currentStatus }
             )
 
@@ -48,8 +50,10 @@ const searchedTaskList = taskList.filter((e) => e.title.toLowerCase().includes(s
 const deleteTask = async (taskId) => {
 
     try {
+ 
+        const URL = import.meta.env.VITE_API_URL || "http://localhost:5000"
 
-        await axios.delete(`http://localhost:5000/tasks/${taskId}`)
+        await axios.delete(`${URL}/tasks/${taskId}`)
 
         setTaskList((prevTasks) =>
             prevTasks.filter((task) => task.id !== taskId)
@@ -81,9 +85,10 @@ const deleteTask = async (taskId) => {
                 <p className="text-red-500 text-sm mr-auto">{error}</p>
 
                 
-                {searchedTaskList.length === 0 ? (<p className="text-gray-300 animate-pulse text-base md:text-xl mt-10 md:mt-20">Loading..</p>) : 
-
+                { loading ? (<p className="text-gray-300 animate-pulse text-base md:text-xl mt-10 md:mt-10">Loading..</p>) :
                 
+                searchedTaskList.length === 0 ? (<p className="text-gray-400 text-base md:text-xl mt-10 md:mt-10">No Tasks</p>) : 
+
                 (<ul className="w-full mt-5 grid grid-cols-1 gap-4">
                 {searchedTaskList .map((each) => {
 
